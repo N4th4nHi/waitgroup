@@ -1,32 +1,26 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"sync"
+	"strings"
 )
 
-func one(wg *sync.WaitGroup) {
-	defer wg.Done()
-	fmt.Println("hola")
-}
-func two(wg *sync.WaitGroup) {
-	defer wg.Done()
-	fmt.Println("ni hao")
-}
-func three(wg *sync.WaitGroup) {
-	defer wg.Done()
-	fmt.Println("hello")
-}
+//demonstrate flags
 
 func main() {
+	//set the flags
+	msg := flag.String("msg", "HOWDY, STRANGER", "the message to display")
+	num := flag.Int("num", 1, "How many times to print the message")
+	caps := flag.Bool("U", false, "Should the string be all caps")
+	flag.Parse()
 
-	var wg sync.WaitGroup
-	wg.Add(3)
-	go one(&wg)
-	go two(&wg)
-	go three(&wg)
-
-	//Delay
-	wg.Wait()
+	//check if the user set the flag
+	if *caps {
+		*msg = strings.ToUpper(*msg)
+	}
+	for i := 0; i < *num; i++ {
+		fmt.Println(*msg)
+	}
 
 }
